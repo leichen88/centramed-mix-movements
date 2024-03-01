@@ -29,7 +29,7 @@ body { margin: 0; padding: 0; }
     map.on('load', () => {
         map.addSource('line', {
             type: 'geojson',
-            data: 'centromed_route_1.geojson'
+            data: 'centramed_route_all.geojson'
         });
 
         // add a line layer without line-dasharray defined to fill the gaps in the dashed line
@@ -39,7 +39,7 @@ body { margin: 0; padding: 0; }
             id: 'line-background',
             paint: {
                 'line-color': 'yellow',
-                'line-width': 6,
+                'line-width': 2,
                 'line-opacity': 0.4
             }
         });
@@ -51,7 +51,7 @@ body { margin: 0; padding: 0; }
             id: 'line-dashed',
             paint: {
                 'line-color': 'yellow',
-                'line-width': 6,
+                'line-width': 2,
                 'line-dasharray': [0, 4, 3]
             }
         });
