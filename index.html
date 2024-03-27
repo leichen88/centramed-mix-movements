@@ -17,19 +17,31 @@ body { margin: 0; padding: 0; }
 	// TO MAKE THE MAP APPEAR YOU MUST
 	// ADD YOUR ACCESS TOKEN FROM
 	// https://account.mapbox.com
-	mapboxgl.accessToken = 'pk.eyJ1Ijoiemp3enlqY2wiLCJhIjoiY2xiZ2I1Z2kzMGVrODN2bnhzNXY1bHRhYSJ9.P8g6e_grpPgvTTG6buLDog';
+	mapboxgl.accessToken = 'pk.eyJ1IjoidW5oY3IiLCJhIjoiOUQzQ2dnbyJ9.6ghfFmvxpu7HvHzXci_ogw';
     const map = new mapboxgl.Map({
         container: 'map', // container ID
         // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-        style: 'mapbox://styles/mapbox/dark-v11', // style URL
-        center: [18.5, 17.5], // starting position [lng, lat]
-        zoom: 3.3 // starting zoom
+        style: 'mapbox://styles/unhcr/clu8l2xz600iw01p68h3n8nte', // style URL
+        center: [19, 20], // starting position [lng, lat]
+        zoom: 3.7 // starting zoom
     });
 
     map.on('load', () => {
+        const layers = map.getStyle().layers;
+        // Find the index of the first symbol layer in the map style.
+        let firstSymbolId;
+        for (const layer of layers) {
+            if (layer.type === 'symbol') {
+                firstSymbolId = layer.id;
+                break;
+            }
+        }
+
+
+
         map.addSource('line', {
             type: 'geojson',
-            data: 'centramed_route_all.geojson'
+            data: 'centralMed_routes.geojson'
         });
 
         // add a line layer without line-dasharray defined to fill the gaps in the dashed line
@@ -38,11 +50,13 @@ body { margin: 0; padding: 0; }
             source: 'line',
             id: 'line-background',
             paint: {
-                'line-color': 'yellow',
-                'line-width': 2,
-                'line-opacity': 0.4
+                'line-color': '#B41C37',
+                'line-width': 3,
+                'line-opacity': 0.3
             }
-        });
+        },
+        firstSymbolId
+        );
 
         // add a line layer with line-dasharray set to the first value in dashArraySequence
         map.addLayer({
@@ -50,11 +64,13 @@ body { margin: 0; padding: 0; }
             source: 'line',
             id: 'line-dashed',
             paint: {
-                'line-color': 'yellow',
-                'line-width': 2,
+                'line-color': '#B41C37',
+                'line-width': 3,
                 'line-dasharray': [0, 4, 3]
             }
-        });
+        },
+        firstSymbolId
+        );
 
         // technique based on https://jsfiddle.net/2mws8y3q/
         // an array of valid line-dasharray values, specifying the lengths of the alternating dashes and gaps that form the dash pattern
@@ -81,7 +97,7 @@ body { margin: 0; padding: 0; }
             // Update line-dasharray using the next value in dashArraySequence. The
             // divisor in the expression `timestamp / 50` controls the animation speed.
             const newStep = parseInt(
-                (timestamp / 50) % dashArraySequence.length
+                (timestamp / 80) % dashArraySequence.length
             );
 
             if (newStep !== step) {
